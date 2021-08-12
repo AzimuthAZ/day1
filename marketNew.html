@@ -1,0 +1,239 @@
+<html>
+
+<head>
+    <title>Market 1.4</title>
+
+</head>
+
+<script>
+    class Item {
+        constructor(_name, _price, _stock, _category) {
+            this.name = _name
+            this.price = _price
+            this.stock = _stock
+            this.category = _category
+        }
+    }
+
+    class FastFood extends Item {
+        constructor(_name, _price, _stock, _category, _expired) {
+            super(_name, _price, _stock, _category)
+            this.expired = _expired
+        }
+    }
+
+
+    class Cloth extends Item {
+        constructor(_name, _price, _stock, _category, _size) {
+            super(_name, _price, _stock, _category)
+            this.size = _size
+        }
+    }
+
+    class Electronic extends Item {
+        constructor(_name, _price, _stock, _category, _warranty) {
+            super(_name, _price, _stock, _category)
+            this.warranty = _warranty
+        }
+    }
+
+    class Fruits extends Item {
+        constructor(_name, _price, _stock, _category, _sugarLevel) {
+            super(_name, _price, _stock, _category)
+            this.sugarLevel = _sugarLevel
+        }
+    }
+
+    class Cart {
+        constructor(_name, _price, _qty) {
+            this.name = _name
+            this.price = _price
+            this.qty = _qty
+        }
+    }
+
+    let categories = ['Fast food', 'Electronic', 'Cloth', 'Fruits']
+    let sugarLevel = ['Low', "Medium", 'High']
+    let size = ['S', "M", 'L', 'XL']
+
+    let Items = [
+        new Cloth('Batik', 20000, 10, 2, 'L'),
+        new FastFood('KFC', 50000, 20, 0, 2022),
+        new Electronic('TV', 5000000, 5, 1, true),
+        new Fruits('Apple', 10000, 30, 3, "Normal")
+    ]
+
+    var cart = [
+
+    ]
+    const renderList = (obj) => {
+        var output = ''
+        for (property in obj) {
+            if (property == 'category') {
+                output += `${property} : ${categories[obj[property]]} `
+            } else {
+                output += `${property} : ${obj[property]}`
+            }
+            if (['name', 'price', 'category', 'stock'].includes(property)) {
+                output += ', '
+            }
+        }
+        return output
+    }
+
+    function tampilkanProd() {
+        var tampilanProd = 'Daftar Items:\n'
+        Items.forEach((val, i) => {
+            tampilanProd += `${i + 1}. ${renderList(val)}\n`
+        })
+        alert(tampilanProd)
+    }
+    do {
+        var mainMenu = prompt(`Menu Utama :
+    1. Daftar Produk
+    2. Menambah Produk
+    3. Menghapus Produk
+    4. Membeli Produk
+    5. Exit`)
+        var confirmation
+        if (mainMenu == 1) {
+            var fruitDisplay = 'Daftar item:\n'
+            for (let i = 0; i < Items.length; i++) {
+                fruitDisplay += `${i + 1}. ${Items[i].name} : Rp.${Items[i]["price"]},00 , stock = ${Items[i].stock}\n`
+            }
+            alert(fruitDisplay)
+        } else if (mainMenu == 2) {
+
+            let printCategories = ''
+            categories.forEach((val, index) => {
+                printCategories += index + 1 + '.' + val + '\n'
+            })
+            var itemNew = prompt('Nama Item')
+            var priceNew = parseInt(prompt('Silahkan menginput harga item baru: '))
+            var stockNew = parseInt(prompt('Silahkan menginput jumlah stock item baru:'))
+            var selectCategory = prompt('Silahkan pilih category untuk Item baru:\n' + printCategories)
+            var inputTambahan
+            let newItem
+            if (selectCategory == 1) {
+                inputTambahan = prompt('Silahkan menginput expiration date. ex : 2022')
+                newItem = new FastFood(
+                    itemNew,
+                    priceNew,
+                    stockNew,
+                    selectCategory - 1,
+                    inputTambahan
+                )
+            } else if (selectCategory == 2) {
+                inputTambahan = prompt('Apakah ada garansi ?\n1.iya\n2.tidak')
+                if (inputTambahan == 1) inputTambahan = true
+                else inputTambahan = false
+                newItem = new Electronic(
+                    itemNew,
+                    priceNew,
+                    stockNew,
+                    selectCategory - 1,
+                    inputTambahan
+                )
+            } else if (selectCategory == 3) {
+                inputTambahan = prompt('Silahkan masukan size: \n1.S\n2.M\n3.L\n4.XL')
+                newItem = new Cloth(itemNew, priceNew, stockNew, selectCategory - 1, size[inputTambahan - 1])
+            } else {
+                inputTambahan = prompt('Silahkan memilih tingkat kemanisan: \n1.Low\n2.Normal\n3.High')
+                newItem = new Fruits(itemNew, priceNew, stockNew, selectCategory - 1, sugarLevel[inputTambahan - 1])
+            }
+            var confirm = confirm(`${itemNew}, harga Rp.${priceNew},00 , stock ${stockNew},categori = ${categories[selectCategory - 1]}\nconfirm ?`)
+            if (confirm) {
+                Items.push(newItem)
+                tampilkanProd()
+            } else {
+                alert('Kembali ke menu utama')
+            }
+        } else if (mainMenu == 3) {
+            var fruitDisplayDel = 'Silahkan pilih item yang mau dihapus:\n'
+            for (let i = 0; i < Items.length; i++) {
+                fruitDisplayDel += `${i + 1}. ${Items[i].name} : Rp.${Items[i].price},00 , stock = ${Items[i].stock}\n`
+            }
+            var nomorDelete = prompt(fruitDisplayDel)
+            var confirm = confirm(`Apakah anda yakin ingin menghapus item ${Items[nomorDelete - 1].name} ?`)
+            if (confirm) {
+                Items.splice(nomorDelete - 1, 1)
+                tampilkanProd()
+            } else {
+                alert('Kembali ke menu utama')
+            }
+        } else if (mainMenu == 4) {
+            while (true) {
+                var itemList = 'Silahkan pilih item yang ingin dibeli:\n'
+                for (let i = 0; i < Items.length; i++) {
+                    itemList += `${i + 1}. ${Items[i].name} : Rp.${Items[i].price},00 , stock = ${Items[i].stock}\n`
+                }
+                var itemQuantity = prompt(itemList)
+                do {
+                    var qtyBuy = parseInt(prompt(`beli ${Items[itemQuantity - 1].name} berapa ? stock =  ${Items[itemQuantity - 1].stock} `))
+                    if (isNaN(qtyBuy) || qtyBuy > Items[itemQuantity - 1].stock || qtyBuy < 0) {
+                        alert('Jumlah barang yang diinput melebihi stock yang ada atau tidak bisa diterima')
+                    }
+                } while (isNaN(qtyBuy) || qtyBuy > Items[itemQuantity - 1].stock || qtyBuy < 0);
+
+                Items[itemQuantity - 1].stock -= qtyBuy
+                var indexcart = -1
+                for (let i = 0; i < cart.length; i++) {
+                    if (cart[i].name == Items[itemQuantity - 1].name) {
+                        indexcart = i
+                        break
+                    }
+                }
+                if (indexcart >= 0) {
+                    cart[indexcart].qty += qtyBuy
+                } else {
+                    let addCart = new Cart(Items[itemQuantity - 1].name, Items[itemQuantity - 1].price, qtyBuy)
+                    cart.push(addCart)
+                }
+
+                var cartDisplay = 'Daftar keranjang:\n'
+                for (let i = 0; i < cart.length; i++) {
+                    cartDisplay += `${i + 1}. ${cart[i].name} : Rp.${cart[i].price},00 , qty = ${cart[i].qty}\n`
+                }
+                alert(cartDisplay)
+                var confirmBuy = confirm('Apakah masih ada item yang ingin dibeli ?')
+                if (!confirmBuy) {
+                    break
+                }
+            }
+
+            var grandTotal = 0
+            for (let i = 0; i < cart.length; i++) {
+                grandTotal += cart[i].price * cart[i].qty
+            }
+            var promptPay = `List barang yang dibeli:\n`
+            for (let i = 0; i < cart.length; i++) {
+                promptPay += `${i + 1}. ${cart[i].name} : Rp.${cart[i].price},00 X qty = ${cart[i].qty} = ${cart[i].qty * cart[i].price}\n`
+            }
+            promptPay += `Jumlah yang harus di bayarkan = Rp. ${grandTotal}`
+            do {
+                var transaction = prompt(promptPay)
+                if (parseInt(transaction) === grandTotal) {
+                    alert('Pembayaran berhasil!')
+                } else if (transaction > grandTotal) {
+                    alert('Pembayaran berhasil! \nKembalian \nRp.' + (transaction - grandTotal))
+                } else {
+                    alert('Pembayaran tidak berhasil! \nUang masih kurang Rp.' + (grandTotal - transaction))
+                }
+            } while (transaction < grandTotal || isNaN(transaction));
+            alert('Terima kasih dan selamat berbelanja kembali')
+            cart = []
+
+        }
+        else if (mainMenu == 5) {
+            confirmation = confirm('Apakah anda yakin ingin keluar dari menu utama ?')
+        } else {
+            alert('Input yang dimasukkan tidak sesuai')
+        }
+
+    } while (!confirmation);
+
+
+
+</script>
+
+</html>
